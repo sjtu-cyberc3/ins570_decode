@@ -1,0 +1,29 @@
+launch:
+  - arg:
+      name: leap_seconds
+      default: '18'
+  - arg:
+      name: frame_id
+      default: inertial
+  - arg:
+      name: rs422_port
+  - arg:
+      name: container_name
+
+  - load_composable_node:
+      target: $(var container_name)
+      composable_node:
+        - pkg: ins570_decode
+          plugin: ins570_decode::DecodeNode
+          name: ins570_decode_node
+          namespace: /driver/inertial
+          param:
+            - name: leap_seconds
+              value: $(var leap_seconds)
+            - name: frame_id
+              value: $(var frame_id)
+            - name: rs422_port
+              value: $(var rs422_port)
+          extra_arg:
+            - name: use_intra_process_comms
+              value: 'true'
