@@ -156,9 +156,9 @@ DecodeNode::DecodeNode(const rclcpp::NodeOptions &options)
                     break;
             }
             uint64_t gps_ns = *reinterpret_cast<uint32_t *>(&data[52]) * 250000ull;
-            uint32_t gps_week = *reinterpret_cast<uint32_t *>(&data[58]);
-            uint32_t utc_sec = 315964800 + gps_week * 7 * 24 * 3600 + gps_ns % 1000000000ull + pImpl->leap_seconds;
-            uint32_t utc_ns = gps_ns % 1000000000;
+            uint64_t gps_week = *reinterpret_cast<uint32_t *>(&data[58]);
+            uint64_t utc_sec = 315964800ull + gps_week * 7 * 24 * 3600 + gps_ns / 1000000000ull - pImpl->leap_seconds;
+            uint64_t utc_ns = gps_ns % 1000000000;
 
             // publish msg
             {
